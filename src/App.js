@@ -13,17 +13,30 @@ function formatDate(date) {
     return date.toLocaleDateString();
 }
 
+function Avatar(props) {
+    return (
+        <img className="Avatar"
+             src={props.user.avatarUrl}
+             alt={props.user.name}
+        />
+    );
+}
+
+function UserInfo(props) {
+    return (
+        <div className="UserInfo">
+            <Avatar user={props.user}/>
+            <div className="UserInfo-name">
+                {props.user.name}
+            </div>
+        </div>
+    );
+}
+
 function Comment(props) {
     return (
         <div className="Comment">
-            <div className="UserInfo">
-                <img className="Avatar"
-                     src={props.author.avatarUrl}
-                     alt={props.author.name}/>
-                <div className="UserInfo-name">
-                    {props.author.name}
-                </div>
-            </div>
+            <UserInfo user={props.author}/>
             <div className="Comment-text">
                 {props.text}
             </div>
@@ -43,11 +56,49 @@ const comment = {
     }
 };
 
+class Clock extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {date: new Date()};
+    }
+
+    // lifecycle hooks
+    componentDidMount() {
+        this.timerID = setInterval(
+            () => this.tick(),
+            1000
+        );
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+
+    }
+
+    tick() {
+        this.setState({
+            date: new Date()
+        });
+    }
+
+    render() {
+        return (
+            <div>
+                <h4>** ==================== **</h4>
+                <h2>   It is {this.state.date.toLocaleTimeString()}.</h2>
+                <h4>** ==================== **</h4>
+            </div>
+        );
+    }
+}
+
 
 class App extends Component {
     render() {
         return (
             <div>
+                <Clock/>
+
                 <Welcome name="Sara"/>
                 <Welcome name="Cahal"/>
                 <Welcome name="Edite"/>
@@ -56,6 +107,9 @@ class App extends Component {
                     date={comment.date}
                     text={comment.text}
                     author={comment.author}/>
+
+
+
             </div>
         );
     }
